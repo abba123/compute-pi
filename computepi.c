@@ -14,12 +14,12 @@ double compute_pi_baseline(size_t N)
     return pi * 4.0;
 }
 
-double compute_pi_openmp(size_t N, int threads)
+double compute_pi_openmp(size_t N)
 {
     double pi = 0.0;
     double dt = 1.0 / N;
     double x;
-    #pragma omp parallel num_threads(threads)
+    #pragma omp parallel
     {
         #pragma omp for private(x) reduction(+:pi)
         for (size_t i = 0; i < N; i++) {
@@ -116,4 +116,71 @@ double compute_pi_avx_unroll(size_t N)
           tmp3[0] + tmp3[1] + tmp3[2] + tmp3[3] +
           tmp4[0] + tmp4[1] + tmp4[2] + tmp4[3];
     return pi * 4.0;
+}
+
+double compute_pi_Leibniz_2(size_t N)
+{
+    double pi=0.0;
+    double x=0.0;
+    for(size_t i=0; i<N; i++) {
+        x=1/((double)i*2+1);
+        if(i%2==0) {
+            pi+=x;
+        } else
+            pi-=x;
+    }
+    return 4*pi;
+}
+
+double compute_pi_Wallis_Product(size_t N)
+{
+    double pi=1.0;
+    double x=0.0;
+    for(size_t i=0; i<N; i++) {
+        x=2*(double)i;
+        pi*=((x+2)/(x+1))*((x+2)/(x+3));
+    }
+    return 2*pi;
+}
+
+double compute_pi_Leibniz_2_openmp(size_t N)
+{
+
+    double pi=0.0;
+    double x=0.0;
+    #pragma omp parallel private(x)
+    {
+        #pragma omp for reduction(+:pi)
+        for(size_t i=0; i<N; i++) {
+            x=1/((double)i*2+1);
+            if(i%2==0)
+                pi+=x;
+            else
+                pi-=x;
+        }
+    }
+    return 4*pi;
+}
+
+double compute_pi_Wallis_Product_openmp(size_t N)
+{
+    double pi=1.0;
+    double x=0.0;
+    #pragma omp parallel private(x)
+    {
+
+        #pragma omp for reduction(*:pi)
+        for(size_t i=0; i<N; i++) {
+            x=2*(double)i;
+            pi*=((x+2)/(x+1))*((x+2)/(x+3));
+        }
+    }
+    return 2*pi;
+}
+
+double error_rate(double input_pi)
+{
+    double pi=3.141593;
+    double diff=pi-input_pi;
+    return diff;
 }

@@ -10,12 +10,8 @@ int main(int argc, char const *argv[])
     pi = compute_pi_baseline(N);
 #endif
 
-#if defined(OPENMP_2)
-    pi = compute_pi_openmp(N, 2);
-#endif
-
-#if defined(OPENMP_4)
-    pi = compute_pi_openmp(N, 4);
+#if defined(OPENMP)
+    pi = compute_pi_openmp(N);
 #endif
 
 #if defined(AVX)
@@ -24,6 +20,22 @@ int main(int argc, char const *argv[])
 
 #if defined(AVXUNROLL)
     pi = compute_pi_avx_unroll(N);
+#endif
+
+#if defined(LEIBNIZ_2)
+    pi = compute_pi_Leibniz_2(N);
+#endif
+
+#if defined(LEIBNIZ_2_OMP)
+    pi = compute_pi_Leibniz_2_openmp(N);
+#endif
+
+#if defined(WALLIS)
+    pi = compute_pi_Wallis_Product(N);
+#endif
+
+#if defined(WALLIS_OMP)
+    pi = compute_pi_Wallis_Product_openmp(N);
 #endif
     printf("N = %d , pi = %lf\n", N, pi);
 
