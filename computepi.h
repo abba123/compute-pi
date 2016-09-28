@@ -8,3 +8,4 @@ double compute_pi_Wallis_Product(size_t N);
 double compute_pi_Leibniz_2(size_t N);
 double compute_pi_Leibniz_2_openmp(size_t N);
 double compute_pi_Wallis_Product_openmp(size_t N);
+double error_rate(double input_pi);
